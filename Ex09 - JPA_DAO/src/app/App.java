@@ -47,7 +47,7 @@ public class App extends Application {
         // récupérer une référence sur son contrôleur
         MainCtrl mainCtrl = loader.getController();
 
-        // préparer la première scènesss
+        // préparer la première scène
         Scene scene1 = new Scene(mainView);
 
         // modifier l'estrade pour la première scène
