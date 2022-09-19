@@ -304,7 +304,7 @@ public class MainCtrl implements Initializable {
         try {
             afficherPersonne(dbWrk.rechercherPersonneAvecNom(nomARechercher));
         } catch (MyDBException ex) {
-            JfxPopup.displayError("ERREUR", null, ex.getMessage());
+            JfxPopup.displayError("ERREUR", null, "Aucune personne trouvée");
         }
     }
 }

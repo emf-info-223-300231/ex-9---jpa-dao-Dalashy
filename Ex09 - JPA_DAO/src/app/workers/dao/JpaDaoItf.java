@@ -11,23 +11,30 @@ import javax.persistence.EntityManager;
  */
 public interface JpaDaoItf<E, PK> {
 
-  // connexion / déconnexion
+    // connexion / déconnexion
 //  void connecter(EntityManager em) throws MyDBException;
-  void deconnecter();
-  boolean estConnectee();
+    void deconnecter();
 
-  // operations CRUD
-  void creer( E e )  throws MyDBException;
-  E lire( PK pk )  throws MyDBException;
-  void modifier( E e )  throws MyDBException;
-  void effacer( PK pk )  throws MyDBException;
+    boolean estConnectee();
 
-  // operations speciales
-  long compter()  throws MyDBException ;
-  E rechercher(String p, Object valeur)  throws MyDBException;
+    // operations CRUD
+    void creer(E e) throws MyDBException;
 
-  // operations sur des listes completes de bean
-  List<E> lireListe()  throws MyDBException ;
-  int effacerListe()  throws MyDBException;
-  int sauverListe( List<E> list )  throws MyDBException;
+    E lire(PK pk) throws MyDBException;
+
+    void modifier(E e) throws MyDBException;
+
+    void effacer(PK pk) throws MyDBException;
+
+    // operations speciales
+    long compter() throws MyDBException;
+
+    E rechercher(String p, Object valeur) throws MyDBException;
+
+    // operations sur des listes completes de bean
+    List<E> lireListe() throws MyDBException;
+
+    int effacerListe() throws MyDBException;
+
+    int sauverListe(List<E> list) throws MyDBException;
 }
