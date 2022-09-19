@@ -47,6 +47,16 @@ public class JpaDao<E, PK> implements JpaDaoItf<E, PK> {
      */
     @Override
     public void creer(E e) throws MyDBException {
+        try {
+            if (e != null) {
+                et.begin();
+                em.persist(e);
+                et.commit();
+            }
+        } catch (Exception ex) {
+            et.rollback();
+            throw new MyDBException(SystemLib.getFullMethodName(), ex.getMessage());
+        }
     }
 
     /**
@@ -148,15 +158,24 @@ public class JpaDao<E, PK> implements JpaDaoItf<E, PK> {
     /**
      * Rechercher un objet d'après la valeur d'une propriété spécifiée.
      *
-     * @param prop la propriété sur laquelle faire la recherche
-     * @param valeur la valeur de cette propriété
+     * @param prop la propriété sur laquelle faire la recherche (ex: "nom")
+     * @param valeur la valeur de cette propriété (nom recherché)
      * @return l'objet recherché ou null
      * @throws app.exceptions.MyDBException
      */
     @Override
     @SuppressWarnings("unchecked")
     public E rechercher(String prop, Object valeur) throws MyDBException {
-        return null;
+        E retour;
+        try {
+            String jpql = "SELECT e FROM " + cl.getSimpleName() + " e WHERE e." + prop + "=:valeur";
+            Query query = em.createQuery(jpql);
+            query.setParameter("valeur", valeur);
+            retour = (E) query.getSingleResult();
+        } catch (Exception ex) {
+            throw new MyDBException(SystemLib.getFullMethodName(), ex.getMessage());
+        }
+        return retour;
     }
 
     /**
@@ -188,7 +207,21 @@ public class JpaDao<E, PK> implements JpaDaoItf<E, PK> {
      */
     @Override
     public int effacerListe() throws MyDBException {
-        int nb;
+        int nb = 0;
+        List<E> liste = lireListe();
+        try {
+            if (liste != null) {
+                et.begin();
+                for (E e : liste) {
+                    em.remove(e);
+                    nb++;
+                }
+                et.commit();
+            }
+        } catch (Exception ex) {
+            et.rollback();
+            throw new MyDBException(SystemLib.getFullMethodName(), ex.getMessage());
+        }
         return nb;
     }
 
@@ -202,6 +235,19 @@ public class JpaDao<E, PK> implements JpaDaoItf<E, PK> {
     @Override
     public int sauverListe(List<E> list) throws MyDBException {
         int nb = 0;
+        try {
+            if (list != null) {
+                et.begin();
+                for (E e : list) {
+                    em.merge(e);
+                    nb++;
+                }
+                et.commit();
+            }
+        } catch (Exception ex) {
+            et.rollback();
+            throw new MyDBException(SystemLib.getFullMethodName(), ex.getMessage());
+        }
         return nb;
     }
 
